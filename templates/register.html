@@ -1,0 +1,9 @@
+<!-- Student registration form. -->
+{% extends 'base.html' %}{% block title %}Register{% endblock %}{% block content %}<section class="auth-card">
+    <h1>Create your account</h1>
+    <p>Registration is available for students.</p>
+    <form method="post">{{ form.hidden_tag() }}<label>{{ form.name.label }}{{ form.name() }}</label><label>{{
+            form.email.label }}{{ form.email(placeholder='you@example.com') }}</label><label>{{ form.password.label }}{{
+            form.password() }}</label><label>{{ form.confirm_password.label }}{{ form.confirm_password() }}</label>{{
+        form.submit(class_='button full') }}</form>
+</section>{% endblock %}

@@ -1,0 +1,24 @@
+<!-- Administrator dashboard with a direct entry point for creating online examinations. -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-head">
+  <div><p class="eyebrow">ADMINISTRATION</p><h1>Control center</h1></div>
+  <a class="button" href="{{ url_for('main.admin_exams') }}">+ Create Online Exam</a>
+</div>
+
+<div class="stats">
+  <div class="stat"><span>Students</span><b>{{ students }}</b></div>
+  <div class="stat"><span>Subjects</span><b>{{ subjects }}</b></div>
+  <div class="stat"><span>Exams</span><b>{{ exams }}</b></div>
+  <div class="stat"><span>Results</span><b>{{ results }}</b></div>
+</div>
+
+<section class="panel">
+  <p class="eyebrow">CREATE YOUR FIRST EXAM</p>
+  <h2>Set up an online assessment</h2>
+  <p>Create a subject first, then add the exam details and its multiple-choice questions.</p>
+  <p><a class="button secondary" href="{{ url_for('main.subjects') }}">1. Add Subject</a> <a class="button" href="{{ url_for('main.admin_exams') }}">2. Add Exam</a> <a class="button secondary" href="{{ url_for('main.questions') }}">3. Add Questions</a></p>
+</section>
+
+<section class="panel"><h2>Quick management</h2><p><a href="{{ url_for('main.subjects') }}">Subjects</a> · <a href="{{ url_for('main.admin_exams') }}">Exams</a> · <a href="{{ url_for('main.questions') }}">Questions</a> · <a href="{{ url_for('main.students') }}">Students</a> · <a href="{{ url_for('main.admin_results') }}">Results</a></p></section>
+{% endblock %}

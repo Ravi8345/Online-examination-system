@@ -1,0 +1,192 @@
+<!-- Timed exam form; requires a webcam face check before the questions unlock, and monitors the webcam throughout via OpenCV on the server. -->
+{% extends 'base.html' %}{% block content %}
+
+<section id="proctor-gate" class="panel proctor-panel">
+  <h2>Webcam check</h2>
+  <p class="eyebrow">Required before this exam can start</p>
+  <div class="proctor-video-wrap">
+    <img id="proctor-video" alt="Webcam preview" style="display:none">
+    <span id="proctor-placeholder" class="proctor-placeholder">Starting your webcam…</span>
+  </div>
+  <div id="proctor-status" class="proctor-status">
+    <span class="dot"></span><span id="proctor-status-text">Connecting…</span>
+  </div>
+  <p><small>Make sure your face is clearly visible and well lit. This exam is monitored for the duration of the attempt;
+      leaving the frame repeatedly will be recorded as a warning.</small></p>
+  <div id="proctor-error" class="proctor-banner danger" style="display:none"></div>
+  <button id="proctor-start-btn" class="button" type="button" disabled>Start exam</button>
+  <button id="proctor-skip-btn" class="button secondary" type="button" style="display:none">Continue without
+    webcam</button>
+</section>
+
+<div id="exam-wrap" style="display:none">
+  <div id="violation-banner" class="proctor-banner" style="display:none"></div>
+  <div class="exam-top">
+    <div>
+      <p class="eyebrow">{{ exam.subject.subject_name }}</p>
+      <h1>{{ exam.exam_name }}</h1>
+      <p>{{ questions|length }} questions · {{ exam.total_marks }} marks</p>
+    </div>
+    <div style="display:grid;gap:8px;justify-items:end">
+      <div id="timer" class="timer">{{ exam.duration }}:00</div>
+      <div class="proctor-status ok" style="padding:5px 12px;font-size:.8rem" id="mini-proctor-status"><span
+          class="dot"></span><span id="mini-proctor-status-text">Camera OK</span></div>
+    </div>
+  </div>
+  <form id="exam-form" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% for q in questions %}
+    <article class="question">
+      <b>{{ loop.index }}. {{ q.question }}</b>
+      {% for key,text in [('A',q.option_a),('B',q.option_b),('C',q.option_c),('D',q.option_d)] %}
+      <label class="option"><input type="radio" name="question_{{ q.id }}" value="{{ key }}"> <span>{{ key }}.</span> {{
+        text }}</label>
+      {% endfor %}
+    </article>
+    {% endfor %}
+    <button class="button" type="submit">Submit exam</button>
+  </form>
+</div>
+
+<script>
+  (function () {
+    const examId = {{ exam.id }};
+    const maxViolations = {{ max_violations }};
+    const base = "/student/exam/" + examId + "/camera/";
+  const gate = document.getElementById('proctor-gate');
+  const examWrap = document.getElementById('exam-wrap');
+  const video = document.getElementById('proctor-video');
+  const placeholder = document.getElementById('proctor-placeholder');
+  const statusBox = document.getElementById('proctor-status');
+  const statusText = document.getElementById('proctor-status-text');
+  const errorBox = document.getElementById('proctor-error');
+  const startBtn = document.getElementById('proctor-start-btn');
+  const skipBtn = document.getElementById('proctor-skip-btn');
+  const violationBanner = document.getElementById('violation-banner');
+  const miniStatus = document.getElementById('mini-proctor-status');
+  const miniStatusText = document.getElementById('mini-proctor-status-text');
+  const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+
+  let seenFaceOnce = false;
+  let noFaceStreak = 0;
+  let violationCount = 0;
+  let monitoring = false;
+
+  function post(path) {
+    return fetch(base + path, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'X-CSRF-Token': csrfToken,
+      },
+      credentials: 'same-origin',
+    });
+  }
+
+  function setGateStatus(ok, text) {
+    statusText.textContent = text;
+    statusBox.classList.toggle('ok', ok);
+  }
+
+  function pollDuringGate() {
+    fetch(base + 'status').then(r => r.json()).then(data => {
+      if (!data.active) return;
+      if (data.face_detected) {
+        seenFaceOnce = true;
+        startBtn.disabled = false;
+        setGateStatus(true, 'Face detected - you are good to go');
+      } else {
+        setGateStatus(false, 'No face detected - center yourself in the frame');
+      }
+      if (!examWrap.dataset.open) setTimeout(pollDuringGate, 1000);
+    }).catch(() => { if (!examWrap.dataset.open) setTimeout(pollDuringGate, 1500); });
+  }
+
+  function pollDuringExam() {
+    if (!monitoring) return;
+    fetch(base + 'status').then(r => r.json()).then(data => {
+      if (data.face_detected) {
+        noFaceStreak = 0;
+        miniStatus.classList.add('ok');
+        miniStatusText.textContent = 'Camera OK';
+      } else {
+        noFaceStreak++;
+        miniStatus.classList.remove('ok');
+        miniStatusText.textContent = 'Face not visible';
+        if (noFaceStreak >= 3) {
+          noFaceStreak = 0;
+          post('violation').then(r => r.json()).then(v => {
+            violationCount = v.count;
+            violationBanner.style.display = 'block';
+            violationBanner.classList.add('danger');
+            violationBanner.textContent = 'Warning ' + violationCount + '/' + maxViolations + ': please stay visible in the webcam.';
+            if (violationCount >= maxViolations) {
+              violationBanner.textContent = 'Too many webcam warnings - submitting your exam automatically.';
+              monitoring = false;
+              post('stop');
+              setTimeout(() => document.getElementById('exam-form').submit(), 1200);
+            }
+          });
+        }
+      }
+      if (monitoring) setTimeout(pollDuringExam, 3000);
+    }).catch(() => { if (monitoring) setTimeout(pollDuringExam, 3000); });
+  }
+
+  function openExam() {
+    examWrap.dataset.open = '1';
+    gate.style.display = 'none';
+    examWrap.style.display = 'block';
+    post('verify');
+    monitoring = true;
+    pollDuringExam();
+    let remaining = {{ exam.duration * 60 }}, timer = document.getElementById('timer');
+    const tick = () => {
+      let m = Math.floor(remaining / 60), s = remaining % 60;
+      timer.textContent = m + ':' + String(s).padStart(2, '0');
+      if (remaining-- <= 0) { monitoring = false; post('stop'); document.getElementById('exam-form').submit(); }
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  document.getElementById('exam-form') && document.getElementById('exam-form').addEventListener('submit', () => {
+    monitoring = false;
+    post('stop');
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if (navigator.sendBeacon) navigator.sendBeacon(base + 'stop');
+  });
+
+  startBtn.addEventListener('click', openExam);
+  skipBtn.addEventListener('click', openExam);
+
+  post('start')
+    .then(r => {
+      if (!r.ok) {
+        return r.text().then(text => { throw new Error('Proctor service error: ' + r.status + (text ? ' - ' + text : '')); });
+      }
+      return r.json();
+    })
+    .then(data => {
+      if (data.ok) {
+        video.src = base + 'feed';
+        video.style.display = 'block';
+        placeholder.style.display = 'none';
+        pollDuringGate();
+      } else {
+        errorBox.style.display = 'block';
+        errorBox.textContent = data.error || 'Webcam unavailable on this device.';
+        setGateStatus(false, 'Webcam unavailable');
+        skipBtn.style.display = 'inline-block';
+      }
+    })
+    .catch(error => {
+      errorBox.style.display = 'block';
+      errorBox.textContent = error.message || 'Could not reach the proctoring service.';
+      skipBtn.style.display = 'inline-block';
+    });
+}) ();
+</script>
+{% endblock %}

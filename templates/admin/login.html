@@ -1,0 +1,6 @@
+<!-- Dedicated, role-restricted login page for teachers and administrators. -->
+{% extends 'base.html' %}
+{% block title %}Teacher Login{% endblock %}
+{% block content %}
+<section class="auth-card"><p class="eyebrow">TEACHER / ADMIN</p><h1>Teacher Login</h1><p>Sign in to publish exams, add questions, and view student results.</p><form method="post">{{ form.hidden_tag() }}<label>{{ form.email.label }}{{ form.email(placeholder='teacher@example.com') }}</label><label>{{ form.password.label }}{{ form.password(placeholder='Password') }}</label>{{ form.submit(class_='button full', value='Open Teacher Panel') }}</form><p>Student? <a href="{{ url_for('main.login') }}">Use Student Login</a>.</p></section>
+{% endblock %}

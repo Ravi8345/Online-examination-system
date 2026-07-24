@@ -1,0 +1,14 @@
+<!-- Public landing page. -->
+{% extends 'base.html' %}{% block title %}Online Examination System{% endblock %}{% block content %}<section
+    class="hero">
+    <div>
+        <p class="eyebrow">SECURE · SIMPLE · SMART</p>
+        <h1>Examinations made professional.</h1>
+        <p>Run and take assessments in one focused platform.</p><a class="button"
+            href="{{ url_for('main.register') }}">Create student account</a> <a class="button"
+            href="{{ url_for('main.teacher_register') }}">Create teacher account</a>
+    </div>
+    <div class="hero-card"><strong>Ready to assess?</strong><span>Secure login, timed exams, automatic results.</span>
+        <p><a href="{{ url_for('main.teacher_login') }}">Teacher Login</a></p>
+    </div>
+</section>{% endblock %}

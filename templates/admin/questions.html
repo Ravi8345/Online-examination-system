@@ -1,0 +1,11 @@
+<!-- Admin page for adding multiple-choice questions to an online exam. -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-head"><div><p class="eyebrow">ADMIN PANEL</p><h1>{% if editing %}Edit{% else %}Add{% endif %} Exam Questions</h1><p>Each question is shown to students when they start the selected exam.</p></div><a class="button secondary" href="{{ url_for('main.admin_exams') }}">View Exams</a></div>
+{% if not has_exams %}
+<section class="panel"><h2>Create an exam first</h2><p>Questions must be added to a published exam.</p><a class="button" href="{{ url_for('main.admin_exams') }}">Create Exam</a></section>
+{% else %}
+<section class="panel"><form method="post" class="grid-form">{{ form.hidden_tag() }}<label>{{ form.exam_id.label }}{{ form.exam_id() }}</label><label class="wide">{{ form.question.label }}{{ form.question(rows=3, placeholder='Write the question here') }}</label><label>{{ form.option_a.label }}{{ form.option_a() }}</label><label>{{ form.option_b.label }}{{ form.option_b() }}</label><label>{{ form.option_c.label }}{{ form.option_c() }}</label><label>{{ form.option_d.label }}{{ form.option_d() }}</label><label>{{ form.correct_answer.label }}{{ form.correct_answer() }}</label><label>{{ form.marks.label }}{{ form.marks(placeholder='Example: 1') }}</label>{{ form.submit(class_='button', value='Save Question') }}</form></section>
+{% endif %}
+<section class="panel"><h2>Question bank</h2>{% for q in questions %}<div class="list-row"><div><b>{{ q.exam.exam_name }}</b><small>{{ q.question|truncate(90) }} · {{ q.marks }} marks</small></div><div><a href="{{ url_for('main.edit_question', question_id=q.id) }}">Edit</a> <form style="display:inline" method="post" action="{{ url_for('main.delete_question', question_id=q.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link-danger">Delete</button></form></div></div>{% else %}<p>No questions added yet.</p>{% endfor %}</section>
+{% endblock %}

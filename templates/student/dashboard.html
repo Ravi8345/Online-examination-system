@@ -1,0 +1,20 @@
+<!-- Student dashboard overview. -->
+{% extends 'base.html' %}{% block content %}<div class="dashboard-head">
+    <div>
+        <p class="eyebrow">STUDENT PORTAL</p>
+        <h1>Hello, {{ current_user.name }}</h1>
+    </div><a class="button secondary" href="{{ url_for('main.profile') }}">My profile</a>
+</div>
+<div class="stats">
+    <div class="stat"><span>Available exams</span><b>{{ exams|length }}</b></div>
+    <div class="stat"><span>Completed exams</span><b>{{ results|length }}</b></div>
+</div>
+<section class="panel">
+    <div class="section-title">
+        <h2>Upcoming & available</h2><a href="{{ url_for('main.student_exams') }}">View all</a>
+    </div>{% for exam in exams[:4] %}<div class="list-row">
+        <div><b>{{ exam.exam_name }}</b><small>{{ exam.subject.subject_name }} · {{ exam.duration }} min</small></div>{%
+        if exam.id in attempted %}<span class="badge">Completed</span>{% else %}<a class="button small"
+            href="{{ url_for('main.start_exam', exam_id=exam.id) }}">Start exam</a>{% endif %}
+    </div>{% else %}<p>No exams are available yet.</p>{% endfor %}
+</section>{% endblock %}

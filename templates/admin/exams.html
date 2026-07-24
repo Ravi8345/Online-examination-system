@@ -1,0 +1,13 @@
+<!-- Admin page for publishing an exam that eligible students can take. -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-head"><div><p class="eyebrow">ADMIN PANEL</p><h1>{% if editing %}Edit{% else %}Publish{% endif %} Online Exam</h1><p>Create an exam now; students can take it on or after the selected exam date.</p></div><a class="button secondary" href="{{ url_for('main.questions') }}">Add Questions</a></div>
+
+{% if not has_subjects %}
+<section class="panel"><h2>Add a subject first</h2><p>An exam must belong to a subject, such as Mathematics or Python.</p><a class="button" href="{{ url_for('main.subjects') }}">Create Subject</a></section>
+{% else %}
+<section class="panel"><h2>Exam details</h2><form method="post" class="grid-form">{{ form.hidden_tag() }}<label>{{ form.subject_id.label }}{{ form.subject_id() }}</label><label>{{ form.exam_name.label }}{{ form.exam_name(placeholder='Example: Python Basics Test') }}</label><label>{{ form.duration.label }}{{ form.duration(placeholder='Example: 30') }}</label><label>{{ form.total_marks.label }}{{ form.total_marks(placeholder='Example: 20') }}</label><label>{{ form.exam_date.label }}{{ form.exam_date() }}</label>{{ form.submit(class_='button', value='Publish Exam') }}</form></section>
+{% endif %}
+
+<section class="panel"><h2>Published exams</h2><table><thead><tr><th>Exam</th><th>Subject</th><th>Available from</th><th>Duration</th><th>Questions</th><th></th></tr></thead><tbody>{% for exam in exams %}<tr><td>{{ exam.exam_name }}</td><td>{{ exam.subject.subject_name }}</td><td>{{ exam.exam_date.strftime('%d %b %Y') }}</td><td>{{ exam.duration }} min</td><td>{{ exam.questions|length }}</td><td><a href="{{ url_for('main.edit_exam', exam_id=exam.id) }}">Edit</a> <form style="display:inline" method="post" action="{{ url_for('main.delete_exam', exam_id=exam.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="link-danger">Delete</button></form></td></tr>{% else %}<tr><td colspan="6">No exams published yet.</td></tr>{% endfor %}</tbody></table></section>
+{% endblock %}

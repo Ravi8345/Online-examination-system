@@ -1,0 +1,24 @@
+<!-- Student completed-exam history table. -->
+{% extends 'base.html' %}{% block content %}<h1>Exam history</h1>
+<section class="panel">
+    <table>
+        <thead>
+            <tr>
+                <th>Exam</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>{% for item in results %}<tr>
+                <td>{{ item.exam.exam_name }}</td>
+                <td>{{ item.score }}/{{ item.exam.total_marks }}</td>
+                <td>{{ item.percentage }}%</td>
+                <td><span class="badge {{ item.status|lower }}">{{ item.status }}</span></td>
+                <td><a href="{{ url_for('main.result', result_id=item.id) }}">View</a></td>
+            </tr>{% else %}<tr>
+                <td colspan="5">No completed exams.</td>
+            </tr>{% endfor %}</tbody>
+    </table>
+</section>{% endblock %}

@@ -1,0 +1,10 @@
+<!-- Student available-exams list. -->
+{% extends 'base.html' %}{% block content %}<div class="dashboard-head">
+    <h1>Available exams</h1><a href="{{ url_for('main.student_dashboard') }}">Dashboard</a>
+</div>
+<section class="panel">{% for exam in exams %}<div class="list-row">
+        <div><b>{{ exam.exam_name }}</b><small>{{ exam.subject.subject_name }} · {{ exam.exam_date.strftime('%d %b %Y')
+                }} · {{ exam.duration }} minutes</small></div>{% if exam.id in attempted %}<span
+            class="badge">Completed</span>{% else %}<a class="button small"
+            href="{{ url_for('main.start_exam', exam_id=exam.id) }}">Start</a>{% endif %}
+    </div>{% else %}<p>No released exams currently.</p>{% endfor %}</section>{% endblock %}

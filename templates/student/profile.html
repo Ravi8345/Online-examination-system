@@ -1,0 +1,6 @@
+<!-- Student profile update form. -->
+{% extends 'base.html' %}{% block content %}<section class="auth-card">
+    <h1>My profile</h1>
+    <form method="post">{{ form.hidden_tag() }}<label>{{ form.name.label }}{{ form.name() }}</label><label>Email<input
+                value="{{ current_user.email }}" disabled></label>{{ form.submit(class_='button full') }}</form>
+</section>{% endblock %}

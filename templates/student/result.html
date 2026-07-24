@@ -1,0 +1,9 @@
+<!-- Completed exam result summary. -->
+{% extends 'base.html' %}{% block content %}<section class="result-card">
+    <p class="eyebrow">EXAM RESULT</p>
+    <h1>{{ result.exam.exam_name }}</h1>
+    <div class="score {{ result.status|lower }}">{{ result.percentage }}%</div>
+    <h2>{{ result.status }}</h2>
+    <p>You scored <b>{{ result.score }}</b> out of {{ result.exam.total_marks }} marks.</p><a class="button"
+        href="{{ url_for('main.history') }}">View exam history</a>
+</section>{% endblock %}

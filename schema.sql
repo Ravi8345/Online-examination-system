@@ -1,0 +1,9 @@
+-- MySQL schema matching the Flask-SQLAlchemy models. Create the database before running this file.
+CREATE DATABASE IF NOT EXISTS `online-exam` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `online-exam`;
+CREATE TABLE user (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(120) NOT NULL, email VARCHAR(120) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, role VARCHAR(20) NOT NULL DEFAULT 'Student');
+CREATE TABLE subject (id INT AUTO_INCREMENT PRIMARY KEY, subject_name VARCHAR(120) NOT NULL UNIQUE);
+CREATE TABLE exam (id INT AUTO_INCREMENT PRIMARY KEY, subject_id INT NOT NULL, exam_name VARCHAR(160) NOT NULL, duration INT NOT NULL, total_marks INT NOT NULL, exam_date DATE NOT NULL, FOREIGN KEY (subject_id) REFERENCES subject(id) ON DELETE CASCADE);
+CREATE TABLE question (id INT AUTO_INCREMENT PRIMARY KEY, exam_id INT NOT NULL, question TEXT NOT NULL, option_a VARCHAR(300) NOT NULL, option_b VARCHAR(300) NOT NULL, option_c VARCHAR(300) NOT NULL, option_d VARCHAR(300) NOT NULL, correct_answer CHAR(1) NOT NULL, marks INT NOT NULL DEFAULT 1, FOREIGN KEY (exam_id) REFERENCES exam(id) ON DELETE CASCADE);
+CREATE TABLE student_answer (id INT AUTO_INCREMENT PRIMARY KEY, student_id INT NOT NULL, question_id INT NOT NULL, selected_option CHAR(1) NOT NULL, FOREIGN KEY (student_id) REFERENCES user(id) ON DELETE CASCADE, FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE);
+CREATE TABLE result (id INT AUTO_INCREMENT PRIMARY KEY, student_id INT NOT NULL, exam_id INT NOT NULL, score FLOAT NOT NULL, percentage FLOAT NOT NULL, status VARCHAR(10) NOT NULL, submitted_at DATETIME NOT NULL, UNIQUE KEY uq_student_exam_attempt (student_id, exam_id), FOREIGN KEY (student_id) REFERENCES user(id) ON DELETE CASCADE, FOREIGN KEY (exam_id) REFERENCES exam(id) ON DELETE CASCADE);

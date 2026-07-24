@@ -1,0 +1,15 @@
+<!-- Dedicated login page for student accounts. -->
+{% extends 'base.html' %}
+{% block title %}Student Login{% endblock %}
+{% block content %}
+<section class="auth-card">
+    <p class="eyebrow">STUDENT PORTAL</p>
+    <h1>Student Login</h1>
+    <p>Sign in to take exams and view your results.</p>
+    <form method="post">{{ form.hidden_tag() }}<label>{{ form.email.label }}{{ form.email(placeholder='you@example.com')
+            }}</label><label>{{ form.password.label }}{{ form.password(placeholder='Password') }}</label>{{
+        form.submit(class_='button full', value='Open Student Portal') }}</form>
+    <p>New student? <a href="{{ url_for('main.register') }}">Create an account</a>.</p>
+    <p>Teacher? <a href="{{ url_for('main.teacher_login') }}">Use Teacher Login</a>.</p>
+</section>
+{% endblock %}
