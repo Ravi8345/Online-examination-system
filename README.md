@@ -1,92 +1,246 @@
-# Online Examination System
+# 🎓 AI-Powered Online Examination System
 
-A complete Flask/MySQL examination portal with secure login, student exam delivery, automatic grading, and administrator management screens.
+A secure and intelligent **Online Examination System** developed using **Python Flask**, **MySQL**, and **OpenCV**. The application provides a complete platform for conducting online examinations with role-based access for **Admin**, **Teacher**, and **Student**, while enhancing exam integrity through webcam-based face detection.
 
-## Features
+---
 
-- Student registration, secure password hashing, Flask-Login sessions, and CSRF-protected forms.
-- Administrator and student dashboards with role-based access control.
-- Subject, exam, and question create, edit, and delete workflows.
-- Timed multiple-choice exams, one attempt per student, answer storage, score calculation, and pass/fail results.
-- Student search and result filtering.
+# 🚀 Features
 
-## Project tree
+* 🔐 Secure user authentication
+* 👨‍💼 Admin, Teacher, and Student dashboards
+* 📚 Subject and Exam Management
+* ❓ Question Bank Management
+* 📝 Online Examination Portal
+* 📊 Automatic Result Generation
+* 📸 Webcam-based Face Detection using OpenCV
+* 🛡️ CSRF Protection
+* 🔑 Session Management with Flask-Login
+* 💾 MySQL Database Integration
+* 📱 Responsive User Interface
 
-```text
-app.py                 Application factory and entry point
-config.py              Environment-based Flask/MySQL configuration
-extensions.py          Flask extension instances
-models.py              SQLAlchemy database models
-forms.py               Validated Flask-WTF forms
-routes.py              Blueprint routes and authorization checks
-schema.sql             Standalone MySQL schema
-templates/             Jinja2 pages for public, student, and admin areas
-static/css/style.css   Responsive CSS design system
+---
+
+# 🛠️ Technologies Used
+
+## Backend
+
+* Python
+* Flask
+* Flask-SQLAlchemy
+* Flask-Login
+* Flask-WTF
+* OpenCV
+
+## Frontend
+
+* HTML5
+* CSS3
+* JavaScript
+* Bootstrap
+
+## Database
+
+* MySQL
+
+## Tools
+
+* Visual Studio Code
+* XAMPP
+* Git & GitHub
+
+---
+
+# 📂 Project Structure
+
+```
+online-examination-system/
+│
+├── app.py
+├── config.py
+├── models.py
+├── forms.py
+├── routes/
+├── templates/
+├── static/
+├── extensions.py
+├── schema.sql
+├── requirements.txt
+└── README.md
 ```
 
-## Setup (Windows PowerShell)
+---
 
-```powershell
+# ⚙️ Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/online-examination-system.git
+```
+
+### 2. Navigate to the Project
+
+```bash
+cd online-examination-system
+```
+
+### 3. Create a Virtual Environment
+
+**Windows**
+
+```bash
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+venv\Scripts\activate
+```
+
+**Linux / macOS**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 4. Install Dependencies
+
+```bash
 pip install -r requirements.txt
-$env:SECRET_KEY = "replace-with-a-long-random-value"
+```
+
+### 5. Configure Database
+
+* Start MySQL using XAMPP.
+* Create a new database.
+* Import the `schema.sql` file.
+* Update the database credentials in `config.py`.
+
+### 6. Run the Application
+
+```bash
 python app.py
 ```
 
-Open `http://127.0.0.1:5000` in a browser. The application uses a local SQLite database by default, so no MySQL server is required for development.
+Open your browser and visit:
 
-### Use XAMPP / MySQL instead of SQLite
-1. Start XAMPP and start the MySQL service.
-2. Open phpMyAdmin or run the MySQL shell and create the database:
-
-```sql
-CREATE DATABASE `online-exam` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+http://127.0.0.1:5000
 ```
 
-3. In PowerShell set the environment variable before launching the app. You can use a MySQL user ID like `mysqlid`:
+---
 
-```powershell
-$env:SECRET_KEY = "replace-with-a-long-random-value"
-$env:MYSQL_USER = "mysqlid"
-$env:MYSQL_PASSWORD = "YOUR_PASSWORD"
-$env:MYSQL_HOST = "127.0.0.1"
-$env:MYSQL_PORT = "3306"
-$env:MYSQL_DATABASE = "online-exam"
-python app.py
-```
+# 👥 User Roles
 
-If you prefer one URL instead, set `DATABASE_URL` directly:
+### 👨‍💼 Admin
 
-```powershell
-$env:DATABASE_URL = "mysql+pymysql://mysqlid:YOUR_PASSWORD@127.0.0.1/online-exam"
-python app.py
-```
+* Manage teachers
+* Manage students
+* Manage subjects
+* Create examinations
+* View reports
 
-If your XAMPP root user has no password, use:
+### 👨‍🏫 Teacher
 
-```powershell
-$env:DATABASE_URL = "mysql+pymysql://root:@127.0.0.1/online-exam"
-```
+* Create exams
+* Add questions
+* Manage question bank
+* View student performance
 
-The application will connect to the XAMPP MySQL database and SQLAlchemy will create the database tables automatically on first startup.
+### 👨‍🎓 Student
 
-If you prefer to create tables manually, import `schema.sql` into the `online-exam` database from phpMyAdmin or the MySQL shell.
+* Login securely
+* Attend online examinations
+* Webcam verification during exams
+* View examination results
 
-## First administrator
+---
 
-Create the administrator from the command line—public registration deliberately creates **Student** accounts only:
+# 📸 AI-Based Proctoring
 
-```powershell
-.\venv\Scripts\Activate.ps1
-flask --app app:create_app create-admin
-```
+The system integrates **OpenCV** for webcam-based monitoring during examinations.
 
-Enter the prompted name, email, and password. Then sign in through `/login`; the navigation will show **Admin dashboard** and **Manage**. Running the command with an existing email safely promotes that account to Administrator.
+Features include:
 
-## Test checklist
+* Face detection
+* Continuous webcam monitoring
+* Enhanced examination security
+* Reduced chances of impersonation
 
-1. Register a student and confirm duplicate email registration is rejected.
-2. Promote one account to Admin, create a subject, an exam, and questions.
-3. Log in as a student, complete the released exam, and verify the result/history.
-4. Confirm a second submission is blocked and admin results can be filtered.
+---
+
+# 🔒 Security Features
+
+* Flask-Login authentication
+* Password protection
+* CSRF protection
+* Session management
+* Role-based authorization
+* Input validation
+
+---
+
+# 📊 Database
+
+The application stores information related to:
+
+* Users
+* Students
+* Teachers
+* Subjects
+* Exams
+* Questions
+* Results
+
+using a **MySQL** relational database.
+
+---
+
+# 🎯 Future Enhancements
+
+* Face Recognition Authentication
+* AI-based Cheating Detection
+* Live Video Monitoring
+* Email Notifications
+* OTP Login
+* PDF Result Reports
+* Analytics Dashboard
+* Cloud Deployment
+
+---
+
+# 📸 Screenshots
+
+Add screenshots of the following pages:
+
+* Home Page
+* Login Page
+* Admin Dashboard
+* Teacher Dashboard
+* Student Dashboard
+* Exam Interface
+* Webcam Monitoring
+* Result Page
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a new branch.
+3. Commit your changes.
+4. Push the branch.
+5. Open a Pull Request.
+
+---
+
+# 📄 License
+
+This project is intended for educational and learning purposes.
+
+---
+
+# 👨‍💻 Author
+
+**Ravi Kumar Paswan**
+
+BCA Student | Python & Flask Developer | Web Developer
