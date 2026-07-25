@@ -1,4 +1,4 @@
-# 🎓 AI-Powered Online Examination System
+# Online Examination System with Webcam-Based Face Detection
 
 A secure and intelligent **Online Examination System** developed using **Python Flask**, **MySQL**, and **OpenCV**. The application provides a complete platform for conducting online examinations with role-based access for **Admin**, **Teacher**, and **Student**, while enhancing exam integrity through webcam-based face detection.
 
