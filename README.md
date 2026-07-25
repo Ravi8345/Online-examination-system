@@ -2,7 +2,7 @@
 
 A secure and intelligent **Online Examination System** developed using **Python Flask**, **MySQL**, and **OpenCV**. The application provides a complete platform for conducting online examinations with role-based access for **Admin**, **Teacher**, and **Student**, while enhancing exam integrity through webcam-based face detection.
 
----
+
 
 # 🚀 Features
 
@@ -17,8 +17,6 @@ A secure and intelligent **Online Examination System** developed using **Python 
 * 🔑 Session Management with Flask-Login
 * 💾 MySQL Database Integration
 * 📱 Responsive User Interface
-
----
 
 # 🛠️ Technologies Used
 
@@ -125,11 +123,9 @@ Open your browser and visit:
 http://127.0.0.1:5000
 ```
 
----
-
 # 👥 User Roles
 
-### 👨‍💼 Admin
+#👨‍💼 Admin
 
 * Manage teachers
 * Manage students
@@ -137,21 +133,19 @@ http://127.0.0.1:5000
 * Create examinations
 * View reports
 
-### 👨‍🏫 Teacher
+# 👨‍🏫 Teacher
 
 * Create exams
 * Add questions
 * Manage question bank
 * View student performance
 
-### 👨‍🎓 Student
+# 👨‍🎓 Student
 
 * Login securely
 * Attend online examinations
 * Webcam verification during exams
 * View examination results
-
----
 
 # 📸 AI-Based Proctoring
 
@@ -164,8 +158,6 @@ Features include:
 * Enhanced examination security
 * Reduced chances of impersonation
 
----
-
 # 🔒 Security Features
 
 * Flask-Login authentication
@@ -174,8 +166,6 @@ Features include:
 * Session management
 * Role-based authorization
 * Input validation
-
----
 
 # 📊 Database
 
@@ -191,8 +181,6 @@ The application stores information related to:
 
 using a **MySQL** relational database.
 
----
-
 # 🎯 Future Enhancements
 
 * Face Recognition Authentication
@@ -204,43 +192,13 @@ using a **MySQL** relational database.
 * Analytics Dashboard
 * Cloud Deployment
 
----
-
-# 📸 Screenshots
-
-Add screenshots of the following pages:
-
-* Home Page
-* Login Page
-* Admin Dashboard
-* Teacher Dashboard
-* Student Dashboard
-* Exam Interface
-* Webcam Monitoring
-* Result Page
-
----
-
-# 🤝 Contributing
-
-Contributions are welcome.
-
-1. Fork the repository.
-2. Create a new branch.
-3. Commit your changes.
-4. Push the branch.
-5. Open a Pull Request.
-
----
-
 # 📄 License
 
 This project is intended for educational and learning purposes.
 
----
 
 # 👨‍💻 Author
 
-**Ravi Kumar Paswan**
+Ravi Kumar Paswan
 
 BCA Student | Python & Flask Developer | Web Developer
